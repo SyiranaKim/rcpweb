@@ -1,0 +1,1475 @@
+﻿@using RPCMWEB.Models
+<!DOCTYPE html>
+<html lang="en" data-layout="semibox" data-sidebar-visibility="show" data-topbar="light" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - RPCMWEB</title>
+    <meta name="google" content="notranslate">
+
+    <!-- Include Velzon CSS -->
+    @Html.Partial("~/Views/Shared/_title_meta.cshtml")
+    @Html.Partial("~/Views/Shared/_head_css.cshtml")
+
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --brand-green: #0b6b3b;
+            --muted: #6c757d;
+            --card-bg: #ffffff;
+            --shadow: 0 6px 18px rgba(0,0,0,0.08);
+            --nav-hover: rgba(11, 107, 59, 0.1);
+            --topbar-bg: #f8f9fa;
+            --border-color: #e9ecef;
+        }
+
+        [data-theme="dark"] {
+            --brand-green: #2ecc71;
+            --muted: #95a5a6;
+            --card-bg: #2c3e50;
+            --shadow: 0 6px 18px rgba(0,0,0,0.3);
+            --nav-hover: rgba(46, 204, 113, 0.1);
+            --topbar-bg: #34495e;
+            --border-color: #4a6278;
+            color: #ecf0f1;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #222;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body {
+            background: #1a252f;
+            color: #ecf0f1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Top Bar Styles */
+        .top-bar {
+            background: var(--topbar-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 0;
+            font-size: 0.85rem;
+        }
+
+        .top-bar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+            font-weight: 700;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        /* Language Selector Styles */
+        .language-selector {
+            position: relative;
+        }
+
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+            .language-toggle:hover {
+                background: var(--nav-hover);
+                border-color: var(--brand-green);
+            }
+
+        .language-flag {
+            font-size: 1.1rem;
+        }
+
+        .language-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .language-arrow {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            transition: transform 0.2s ease;
+        }
+
+        .language-selector.open .language-arrow {
+            transform: rotate(180deg);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 8px;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .language-selector.open .language-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(4px);
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+            .language-option:hover {
+                background: var(--nav-hover);
+            }
+
+        /* Top Bar Controls */
+        .top-bar-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .control-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .control-btn:hover {
+                background: var(--nav-hover);
+                border-color: var(--brand-green);
+            }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-bell {
+            position: relative;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .notification-bell:hover {
+                background: var(--nav-hover);
+                border-color: var(--brand-green);
+            }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification-container.open .notification-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(4px);
+        }
+
+        .notification-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--brand-green);
+        }
+
+        .notification-clear {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+
+            .notification-clear:hover {
+                color: var(--brand-green);
+            }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+            .notification-item:hover {
+                background: var(--nav-hover);
+            }
+
+            .notification-item.unread {
+                background: rgba(11, 107, 59, 0.05);
+            }
+
+            .notification-item:last-child {
+                border-bottom: none;
+            }
+
+        .notification-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .notification-message {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .notification-footer {
+            padding: 8px 16px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .notification-view-all {
+            background: none;
+            border: none;
+            color: var(--brand-green);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+            .notification-view-all:hover {
+                text-decoration: underline;
+            }
+
+        .no-notifications {
+            padding: 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+            .user-profile:hover {
+                background: var(--nav-hover);
+            }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--brand-green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        /* Main Header Styles */
+        header.site-header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            gap: 20px;
+        }
+
+        /* Navigation Separator Line */
+        .nav-separator {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 0;
+        }
+
+        /* Modern Navigation */
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            padding: 10px 16px;
+            color: #495057;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: #bdc3c7;
+        }
+
+        .nav-link:hover, .nav-link:focus {
+            color: var(--brand-green);
+            background: var(--nav-hover);
+        }
+
+        .nav-link.active {
+            color: var(--brand-green);
+            background: var(--nav-hover);
+        }
+
+        /* Dropdown Styles - FIXED */
+        .dropdown-toggle {
+            position: relative;
+        }
+
+            .dropdown-toggle::after {
+                content: "▼";
+                font-size: 0.7rem;
+                margin-left: 6px;
+                opacity: 0.7;
+                transition: transform 0.2s ease;
+            }
+
+        .nav-item.dropdown.open .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 0;
+            min-width: 300px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+            /* FIX: Ensure dropdown is displayed */
+            display: block !important;
+        }
+
+        .nav-item.dropdown.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(4px);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 10px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .dropdown-item {
+            color: #bdc3c7;
+        }
+
+        .dropdown-item:hover {
+            background: var(--nav-hover);
+            color: var(--brand-green);
+            border-left-color: var(--brand-green);
+        }
+
+        /* Multi-column dropdown for Internal Links */
+        .dropdown-menu.multi-column {
+            min-width: 500px;
+            padding: 16px;
+        }
+
+        .dropdown-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dropdown-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dropdown-section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--brand-green);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Burger menu for mobile */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+            .burger-menu span {
+                display: block;
+                height: 2px;
+                width: 100%;
+                background-color: #495057;
+                border-radius: 2px;
+                transition: all 0.3s ease;
+            }
+
+        [data-theme="dark"] .burger-menu span {
+            background-color: #bdc3c7;
+        }
+
+        .burger-menu.open span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .burger-menu.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-menu.open span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Main content */
+        .page {
+            padding: 30px 0 50px;
+            min-height: 70vh;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        footer {
+            margin-top: 40px;
+            color: var(--muted);
+            padding: 24px 0;
+            border-top: 1px solid var(--border-color);
+            background: var(--topbar-bg);
+        }
+
+        /* Toast notification styles */
+        .alert.position-fixed {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @@keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Styles */
+        @@media (max-width: 768px) {
+            .top-bar-controls {
+                display: none;
+            }
+
+            .user-profile .user-info {
+                display: none;
+            }
+
+            .notification-dropdown {
+                width: 280px;
+                right: -100px;
+            }
+
+            .burger-menu {
+                display: flex;
+            }
+
+            .main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--card-bg);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+                z-index: 100;
+                padding: 0;
+            }
+
+                .main-nav.open {
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translateY(0);
+                }
+
+            .nav-list {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+                gap: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-link {
+                padding: 14px 16px;
+                margin: 2px 0;
+                justify-content: space-between;
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(11,107,59,0.05);
+                margin: 8px 0;
+                min-width: auto;
+            }
+
+                .dropdown-menu.multi-column {
+                    min-width: auto;
+                }
+
+            .dropdown-columns {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        /* Integration with Velzon */
+        .app-menu {
+            display: none; /* Hide Velzon sidebar for now */
+        }
+
+        #page-topbar {
+            display: none; /* Hide Velzon topbar for now */
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Google Translate Element (Hidden) -->
+    <div id="google_translate_element" style="display: none;"></div>
+
+    <!-- Velzon Preloader -->
+    @Html.Partial("~/Views/Shared/_customizer.cshtml")
+
+    <!-- Custom Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-inner">
+            <div class="top-bar-left">
+                <a href="/" class="company-logo">
+                    <img src="~/assets/images/RPCMLOGO.png" alt="RPCM Logo" class="logo-img">
+                    <span class="translatable" data-resource="CompanyName">RP Chemicals Malaysia</span>
+                </a>
+            </div>
+
+            <div class="top-bar-right">
+                <div class="top-bar-controls">
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button class="control-btn language-toggle" id="translateToggle">
+                            <span class="language-flag">🌐</span>
+                            <span class="language-text translatable" data-resource="Translate">Translate Page</span>
+                            <span class="language-arrow">▼</span>
+                        </button>
+                        <div class="language-dropdown" id="translateDropdown">
+                            <div class="language-option" data-lang="en">
+                                <span class="language-flag">🇺🇸</span>
+                                <span class="language-text">English</span>
+                            </div>
+                            <div class="language-option" data-lang="zh">
+                                <span class="language-flag">🇨🇳</span>
+                                <span class="language-text">中文 (Chinese)</span>
+                            </div>
+                            <div class="language-option" data-lang="ms">
+                                <span class="language-flag">🇲🇾</span>
+                                <span class="language-text">Bahasa Malaysia</span>
+                            </div>
+                            <div class="language-option" data-lang="hi">
+                                <span class="language-flag">🇮🇳</span>
+                                <span class="language-text">हिन्दी (Hindi)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button class="control-btn theme-toggle" id="themeToggle">
+                        <span>🌙</span>
+                        <span class="translatable" data-resource="DarkMode">Dark Mode</span>
+                    </button>
+
+                    <!-- Notifications -->
+                    <div class="notification-container" id="notificationContainer">
+                        <button class="notification-bell" id="notificationBell">
+                            <span>🔔</span>
+                            <span class="notification-badge" id="notificationBadge">3</span>
+                        </button>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <span class="notification-title translatable" data-resource="Notifications">Notifications</span>
+                                <button class="notification-clear" id="clearNotifications">
+                                    <span class="translatable" data-resource="ClearAll">Clear All</span>
+                                </button>
+                            </div>
+                            <ul class="notification-list" id="notificationList">
+                                <!-- Notifications will be populated by JavaScript -->
+                            </ul>
+                            <div class="notification-footer">
+                                <button class="notification-view-all" id="viewAllNotifications">
+                                    <span class="translatable" data-resource="ViewAll">View All Notifications</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Profile -->
+                <div class="user-profile" id="userProfile">
+                    <div class="user-avatar" id="userAvatar">US</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-role" id="userRole">System User</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header with Navigation -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <!-- Desktop Navigation -->
+            <nav class="main-nav">
+                <ul class="nav-list" role="menubar" aria-label="Main menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            <span class="translatable" data-resource="Home">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- Internal Links Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" aria-haspopup="true" aria-expanded="false">
+                            <span class="translatable" data-resource="InternalLinks">Internal Links</span>
+                        </a>
+                        <div class="dropdown-menu multi-column">
+                            <div class="dropdown-columns">
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title translatable" data-resource="SystemsTools">Systems & Tools</div>
+                                    <a class="dropdown-item" href="http://ithelpme.rpcm.com.my/" target="_blank">ITHelpMe</a>
+                                    <a class="dropdown-item" href="http://bp1acmap014.rpcm.local:8080/webtop/" target="_blank">DOCUMENTUM</a>
+                                    <a class="dropdown-item" href="http://bp1acmap013/" target="_blank">RTWeb</a>
+                                    <a class="dropdown-item" href="http://ktnapa02/sites/cms" target="_blank">iCON</a>
+                                    <a class="dropdown-item" href="http://bp1acmap011.rpcm.local/webmatrix/webclient/loginpage.aspx" target="_blank">WebMatrix Access Report</a>
+                                </div>
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title translatable" data-resource="Departments">Departments</div>
+                                    <a class="dropdown-item" href="http://maint.rpcm.com.my/IC/" target="_blank">I&C</a>
+                                    <a class="dropdown-item" href="http://eptw.rpcm.com.my/" target="_blank">EPTW</a>
+                                    <a class="dropdown-item" href="http://maint.rpcm.com.my/Electrical/" target="_blank">Electrical</a>
+                                    <a class="dropdown-item" href="http://hr.rpcm.com.my/sites/plex" target="_blank">Plex</a>
+                                    <a class="dropdown-item" href="http://hsse.rpcm.com.my/Pages/Home.aspx" target="_blank">Wasteport</a>
+                                    <a class="dropdown-item" href="https://ess.rpcm.com.my/" target="_blank">ESS</a>
+                                    <a class="dropdown-item" href="http://opr.rpcm.com.my/" target="_blank">Operation</a>
+                                    <a class="dropdown-item" href="http://tech.rpcm.com.my/" target="_blank">Technical</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Archive Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" aria-haspopup="true" aria-expanded="false">
+                            <span class="translatable" data-resource="Archive">Archive</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="http://inside.rpcm.com.my/Pages/air.aspx" target="_blank">
+                                <span class="translatable" data-resource="InvestigationReport">Investigation Report</span>
+                            </a>
+                            <a class="dropdown-item" href="http://inside.rpcm.com.my/Pages/asr.aspx" target="_blank">
+                                <span class="translatable" data-resource="StaffRelated">Staff Related</span>
+                            </a>
+                            <a class="dropdown-item" href="http://inside.rpcm.com.my/Pages/apn.aspx" target="_blank">
+                                <span class="translatable" data-resource="PlantNewsletter">Plant Newsletter</span>
+                            </a>
+                            <a class="dropdown-item" href="http://inside.rpcm.com.my/Pages/ak.aspx" target="_blank">
+                                <span class="translatable" data-resource="KESUKA">KESUKA</span>
+                            </a>
+                            <a class="dropdown-item" href="http://inside.rpcm.com.my/Pages/alnd.aspx" target="_blank">
+                                <span class="translatable" data-resource="LearningDevelopment">Learning and Development</span>
+                            </a>
+                        </div>
+                    </li>
+
+                    <!-- Corporate Links Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" aria-haspopup="true" aria-expanded="false">
+                            <span class="translatable" data-resource="CorporateLinks">Corporate Links</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="http://www.ril.com/" target="_blank">Reliance</a>
+                            <a class="dropdown-item" href="http://myportal.ril.com/irj/portal" target="_blank">MyPortal</a>
+                            <a class="dropdown-item" href="http://10.128.28.42/rpcm/html/index.html" target="_blank">RPCM</a>
+                            <a class="dropdown-item" href="http://www.recronmalaysia.com/" target="_blank">Recron Malaysia</a>
+                            <a class="dropdown-item" href="https://mail.ril.com/" target="_blank">RIL Outlook Web Access</a>
+                            <a class="dropdown-item" href="http://ircmsoverseas.ril.com/" target="_blank">iRCMS</a>
+                            <a class="dropdown-item" href="https://accessfirst.ril.com/acf/#/login" target="_blank">Access First</a>
+                            <a class="dropdown-item" href="https://sevafirst.ril.com/im/home/login" target="_blank">SEVA First</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="burger-menu" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Navigation Separator Line -->
+        <div class="nav-separator"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page">
+        <div class="container">
+            <!-- Page Title (Velzon) -->
+            @Html.Partial("~/Views/Shared/_page_title.cshtml")
+
+            <!-- Main Content -->
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/_footer.cshtml")
+
+    <!-- Vendor Scripts -->
+    @Html.Partial("~/Views/Shared/_vendor_scripts.cshtml")
+
+    <!-- Validation Scripts -->
+    @Html.Partial("~/Views/Shared/_ValidationScriptsPartial.cshtml")
+
+    <script>
+        // Complete Resource-based Translation System - 4 Languages
+        const translations = {
+            'en': {
+                'CompanyName': 'RP Chemicals Malaysia',
+                'Home': 'Home',
+                'InternalLinks': 'Internal Links',
+                'Archive': 'Archive',
+                'CorporateLinks': 'Corporate Links',
+                'Translate': 'Translate Page',
+                'Welcome': 'Welcome',
+                'CorporateNews': 'Corporate News',
+                'MemorableEvening': 'A memorable evening to honour Mr. Khairul Anuar',
+                'FarewellDinner': 'Farewell dinner — speeches, tribute and memories',
+                'EventSummary': 'Event Summary',
+                'EventDate': 'On 12 October 2025, staff and friends gathered at the Grand Hall to celebrate Mr. Khairul Anuar\'s contributions.',
+                'Highlights': 'Highlights',
+                'TributeVideo': 'Tribute video and slideshow',
+                'PlaquePresentation': 'Presentation of commemorative plaque',
+                'MemoriesSharing': 'Open floor for colleagues to share memories',
+                'QuickLinks': 'Quick Links',
+                'More': 'More',
+                'ITHelpMe': 'IT HelpMe',
+                'ESSPortal': 'ESS Portal',
+                'RecentStories': 'Recent Stories',
+                'GraduationCeremony': 'Graduation Ceremony Highlights',
+                'CampusSafetyWeek': 'Campus Safety Week',
+                'InvestigationReport': 'Investigation Report',
+                'StaffRelated': 'Staff Related',
+                'PlantNewsletter': 'Plant Newsletter',
+                'KESUKA': 'KESUKA',
+                'LearningDevelopment': 'Learning and Development',
+                'InternalPortal': 'Internal Portal',
+                'SystemsTools': 'Systems & Tools',
+                'Departments': 'Departments',
+                'DarkMode': 'Dark Mode',
+                'Notifications': 'Notifications',
+                'ClearAll': 'Clear All',
+                'ViewAll': 'View All Notifications',
+                'Profile': 'Profile',
+                'Settings': 'Settings',
+                'Logout': 'Logout',
+                'Search': 'Search',
+                'Submit': 'Submit',
+                'Cancel': 'Cancel',
+                'Save': 'Save',
+                'Delete': 'Delete',
+                'Edit': 'Edit',
+                'About': 'About',
+                'Contact': 'Contact',
+                'News': 'News',
+                'Calendar': 'Calendar',
+                'Statistics': 'Statistics',
+                'HappeningBoard': 'Happening Board',
+                'HSSEStats': 'HSSE Statistics',
+                'StaffNews': 'Staff News',
+                'PlanCalendar': 'Plan Calendar',
+                'Login': 'Login',
+                'UserProfile': 'User Profile',
+                'SystemUser': 'System User'
+            },
+            'zh': {
+                'CompanyName': 'RP Chemicals 马来西亚',
+                'Home': '首页',
+                'InternalLinks': '内部链接',
+                'Archive': '档案',
+                'CorporateLinks': '公司链接',
+                'Translate': '翻译页面',
+                'Welcome': '欢迎',
+                'CorporateNews': '公司新闻',
+                'MemorableEvening': '纪念 Khairul Anuar 先生的难忘夜晚',
+                'FarewellDinner': '告别晚宴 — 演讲、致敬与回忆',
+                'EventSummary': '活动摘要',
+                'EventDate': '2025年10月12日，员工和朋友们齐聚大会堂，庆祝 Khairul Anuar 先生的贡献。',
+                'Highlights': '亮点',
+                'TributeVideo': '致敬视频和幻灯片',
+                'PlaquePresentation': '纪念牌匾颁发',
+                'MemoriesSharing': '同事分享回忆的开放环节',
+                'QuickLinks': '快速链接',
+                'More': '更多',
+                'ITHelpMe': 'IT 帮助',
+                'ESSPortal': 'ESS 门户',
+                'RecentStories': '最新故事',
+                'GraduationCeremony': '毕业典礼亮点',
+                'CampusSafetyWeek': '校园安全周',
+                'InvestigationReport': '调查报告',
+                'StaffRelated': '员工相关',
+                'PlantNewsletter': '工厂通讯',
+                'KESUKA': 'KESUKA',
+                'LearningDevelopment': '学习与发展',
+                'InternalPortal': '内部门户',
+                'SystemsTools': '系统与工具',
+                'Departments': '部门',
+                'DarkMode': '深色模式',
+                'Notifications': '通知',
+                'ClearAll': '清除全部',
+                'ViewAll': '查看所有通知',
+                'Profile': '个人资料',
+                'Settings': '设置',
+                'Logout': '退出登录',
+                'Search': '搜索',
+                'Submit': '提交',
+                'Cancel': '取消',
+                'Save': '保存',
+                'Delete': '删除',
+                'Edit': '编辑',
+                'About': '关于',
+                'Contact': '联系',
+                'News': '新闻',
+                'Calendar': '日历',
+                'Statistics': '统计',
+                'HappeningBoard': '活动公告板',
+                'HSSEStats': 'HSSE 统计',
+                'StaffNews': '员工新闻',
+                'PlanCalendar': '计划日历',
+                'Login': '登录',
+                'UserProfile': '用户资料',
+                'SystemUser': '系统用户'
+            },
+            'ms': {
+                'CompanyName': 'RP Chemicals Malaysia',
+                'Home': 'Laman Utama',
+                'InternalLinks': 'Pautan Dalaman',
+                'Archive': 'Arkib',
+                'CorporateLinks': 'Pautan Korporat',
+                'Translate': 'Terjemah Halaman',
+                'Welcome': 'Selamat Datang',
+                'CorporateNews': 'Berita Korporat',
+                'MemorableEvening': 'Malam yang tidak dapat dilupakan untuk menghormati Encik Khairul Anuar',
+                'FarewellDinner': 'Majlis makan malam perpisahan — ucapan, penghargaan dan kenangan',
+                'EventSummary': 'Ringkasan Acara',
+                'EventDate': 'Pada 12 Oktober 2025, kakitangan dan rakan-rakan berkumpul di Dewan Besar untuk meraikan sumbangan Encik Khairul Anuar.',
+                'Highlights': 'Sorotan',
+                'TributeVideo': 'Video penghargaan dan persembahan slaid',
+                'PlaquePresentation': 'Penyampaian plak peringatan',
+                'MemoriesSharing': 'Sesi terbuka untuk rakan sekerja berkongsi kenangan',
+                'QuickLinks': 'Pautan Pantas',
+                'More': 'Lagi',
+                'ITHelpMe': 'IT Bantu Saya',
+                'ESSPortal': 'Portal ESS',
+                'RecentStories': 'Cerita Terkini',
+                'GraduationCeremony': 'Sorotan Majlis Konvokesyen',
+                'CampusSafetyWeek': 'Minggu Keselamatan Kampus',
+                'InvestigationReport': 'Laporan Penyiasatan',
+                'StaffRelated': 'Berkaitan Kakitangan',
+                'PlantNewsletter': 'Surat Berita Kilang',
+                'KESUKA': 'KESUKA',
+                'LearningDevelopment': 'Pembelajaran dan Pembangunan',
+                'InternalPortal': 'Portal Dalaman',
+                'SystemsTools': 'Sistem & Alat',
+                'Departments': 'Jabatan',
+                'DarkMode': 'Mod Gelap',
+                'Notifications': 'Pemberitahuan',
+                'ClearAll': 'Kosongkan Semua',
+                'ViewAll': 'Lihat Semua Pemberitahuan',
+                'Profile': 'Profil',
+                'Settings': 'Tetapan',
+                'Logout': 'Log Keluar',
+                'Search': 'Cari',
+                'Submit': 'Hantar',
+                'Cancel': 'Batal',
+                'Save': 'Simpan',
+                'Delete': 'Padam',
+                'Edit': 'Edit',
+                'About': 'Tentang',
+                'Contact': 'Hubungi',
+                'News': 'Berita',
+                'Calendar': 'Kalendar',
+                'Statistics': 'Statistik',
+                'HappeningBoard': 'Papan Peristiwa',
+                'HSSEStats': 'Statistik HSSE',
+                'StaffNews': 'Berita Kakitangan',
+                'PlanCalendar': 'Kalendar Perancangan',
+                'Login': 'Log Masuk',
+                'UserProfile': 'Profil Pengguna',
+                'SystemUser': 'Pengguna Sistem'
+            },
+            'hi': {
+                'CompanyName': 'RP Chemicals मलेशिया',
+                'Home': 'होम',
+                'InternalLinks': 'आंतरिक लिंक',
+                'Archive': 'आर्काइव',
+                'CorporateLinks': 'कॉर्पोरेट लिंक',
+                'Translate': 'पृष्ठ अनुवाद करें',
+                'Welcome': 'स्वागत है',
+                'CorporateNews': 'कॉर्पोरेट समाचार',
+                'MemorableEvening': 'श्री खैरुल अनुअर के सम्मान में एक यादगार शाम',
+                'FarewellDinner': 'विदाई डिनर — भाषण, श्रद्धांजलि और यादें',
+                'EventSummary': 'कार्यक्रम सारांश',
+                'EventDate': '12 अक्टूबर 2025 को, कर्मचारियों और दोस्तों ने श्री खैरुल अनुअर के योगदान का जश्न मनाने के लिए ग्रैंड हॉल में एकत्रित हुए।',
+                'Highlights': 'मुख्य आकर्षण',
+                'TributeVideo': 'श्रद्धांजलि वीडियो और स्लाइडशो',
+                'PlaquePresentation': 'स्मारक पट्टिका प्रस्तुति',
+                'MemoriesSharing': 'सहकर्मियों के लिए यादें साझा करने का खुला मंच',
+                'QuickLinks': 'त्वरित लिंक',
+                'More': 'अधिक',
+                'ITHelpMe': 'आईटी सहायता',
+                'ESSPortal': 'ईएसएस पोर्टल',
+                'RecentStories': 'हाल की कहानियाँ',
+                'GraduationCeremony': 'स्नातक समारोह के मुख्य आकर्षण',
+                'CampusSafetyWeek': 'कैंपस सुरक्षा सप्ताह',
+                'InvestigationReport': 'जाँच रिपोर्ट',
+                'StaffRelated': 'कर्मचारी संबंधित',
+                'PlantNewsletter': 'प्लांट न्यूज़लेटर',
+                'KESUKA': 'केसुका',
+                'LearningDevelopment': 'सीखना और विकास',
+                'InternalPortal': 'आंतरिक पोर्टल',
+                'SystemsTools': 'सिस्टम और टूल्स',
+                'Departments': 'विभाग',
+                'DarkMode': 'डार्क मोड',
+                'Notifications': 'सूचनाएं',
+                'ClearAll': 'सभी साफ करें',
+                'ViewAll': 'सभी सूचनाएं देखें',
+                'Profile': 'प्रोफाइल',
+                'Settings': 'सेटिंग्स',
+                'Logout': 'लॉग आउट',
+                'Search': 'खोजें',
+                'Submit': 'सबमिट करें',
+                'Cancel': 'रद्द करें',
+                'Save': 'सेव करें',
+                'Delete': 'डिलीट करें',
+                'Edit': 'एडिट करें',
+                'About': 'के बारे में',
+                'Contact': 'संपर्क करें',
+                'News': 'समाचार',
+                'Calendar': 'कैलेंडर',
+                'Statistics': 'आंकड़े',
+                'HappeningBoard': 'हो रहा है बोर्ड',
+                'HSSEStats': 'HSSE आंकड़े',
+                'StaffNews': 'कर्मचारी समाचार',
+                'PlanCalendar': 'योजना कैलेंडर',
+                'Login': 'लॉग इन',
+                'UserProfile': 'उपयोगकर्ता प्रोफाइल',
+                'SystemUser': 'सिस्टम उपयोगकर्ता'
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+        function translatePage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('selectedLanguage', lang);
+
+            // Update resource-based translations
+            const translatableElements = document.querySelectorAll('[data-resource]');
+            translatableElements.forEach(element => {
+                const resourceKey = element.getAttribute('data-resource');
+                if (translations[lang] && translations[lang][resourceKey]) {
+                    element.textContent = translations[lang][resourceKey];
+                }
+            });
+
+            // Show success message
+            showTranslationToast(lang);
+        }
+
+        function showTranslationToast(lang) {
+            // Remove existing toasts
+            document.querySelectorAll('.alert.position-fixed').forEach(toast => {
+                toast.remove();
+            });
+
+            // Create a simple toast notification
+            const toast = document.createElement('div');
+            toast.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            toast.innerHTML = `
+                <i class="ri-check-line me-2"></i>
+                <strong>Language changed to ${getLanguageName(lang)}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        function getLanguageName(lang) {
+            const names = {
+                'en': 'English',
+                'zh': '中文 (Chinese)',
+                'ms': 'Bahasa Malaysia',
+                'hi': 'हिन्दी (Hindi)'
+            };
+            return names[lang] || lang;
+        }
+
+        // FIXED: Dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - initializing dropdowns...');
+
+            // Apply saved language
+            const savedLang = localStorage.getItem('selectedLanguage');
+            if (savedLang && savedLang !== 'en') {
+                translatePage(savedLang);
+            }
+
+            // Language selector functionality
+            const translateToggle = document.getElementById('translateToggle');
+            const translateSelector = document.querySelector('.language-selector');
+
+            if (translateToggle && translateSelector) {
+                translateToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    translateSelector.classList.toggle('open');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!translateSelector.contains(e.target)) {
+                        translateSelector.classList.remove('open');
+                    }
+                });
+            }
+
+            // Add click handlers for translation options
+            document.querySelectorAll('.language-option[data-lang]').forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    translatePage(lang);
+                    translateSelector.classList.remove('open');
+                });
+            });
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+
+                    // Update theme button text
+                    const themeText = themeToggle.querySelector('span:last-child');
+                    if (themeText) {
+                        themeText.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+                    }
+                });
+
+                // Initialize theme
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const themeText = themeToggle.querySelector('span:last-child');
+                if (themeText) {
+                    themeText.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+                }
+            }
+
+            // FIXED: Mobile menu functionality
+            const burgerMenu = document.querySelector('.burger-menu');
+            const mainNav = document.querySelector('.main-nav');
+
+            if (burgerMenu && mainNav) {
+                burgerMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('open');
+                    mainNav.classList.toggle('open');
+                });
+            }
+
+            // FIXED: Dropdown functionality - CORRECTED SELECTOR
+            const dropdownToggles = document.querySelectorAll('.nav-item.dropdown > .nav-link');
+
+            console.log('Found dropdown toggles:', dropdownToggles.length);
+
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const parentItem = this.closest('.nav-item');
+                    const isOpen = parentItem.classList.contains('open');
+
+                    console.log('Dropdown clicked:', this.textContent, 'Open:', isOpen);
+
+                    // Close all other dropdowns
+                    document.querySelectorAll('.nav-item.dropdown.open').forEach(item => {
+                        if (item !== parentItem) {
+                            item.classList.remove('open');
+                        }
+                    });
+
+                    // Toggle current dropdown
+                    if (!isOpen) {
+                        parentItem.classList.add('open');
+                    } else {
+                        parentItem.classList.remove('open');
+                    }
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.nav-item.dropdown')) {
+                    document.querySelectorAll('.nav-item.dropdown.open').forEach(item => {
+                        item.classList.remove('open');
+                    });
+                }
+
+                // Close mobile menu when clicking outside
+                if (!e.target.closest('.main-nav') && !e.target.closest('.burger-menu')) {
+                    if (mainNav) mainNav.classList.remove('open');
+                    if (burgerMenu) burgerMenu.classList.remove('open');
+                }
+            });
+
+            // Close dropdowns when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.nav-item.dropdown.open').forEach(item => {
+                        item.classList.remove('open');
+                    });
+                }
+            });
+
+            // Notification system
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationContainer = document.getElementById('notificationContainer');
+
+            if (notificationBell && notificationContainer) {
+                notificationBell.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationContainer.classList.toggle('open');
+                });
+
+                // Sample notifications
+                const notifications = [
+                    { message: 'System maintenance scheduled for Saturday', time: '2 hours ago', unread: true },
+                    { message: 'Your password will expire in 7 days', time: '1 day ago', unread: true },
+                    { message: 'New company policy uploaded', time: '2 days ago', unread: false }
+                ];
+
+                const notificationList = document.getElementById('notificationList');
+                if (notificationList) {
+                    notificationList.innerHTML = notifications.map(notif => `
+                        <li class="notification-item ${notif.unread ? 'unread' : ''}">
+                            <div class="notification-content">
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">${notif.time}</div>
+                            </div>
+                        </li>
+                    `).join('');
+                }
+
+                // Clear notifications
+                const clearBtn = document.getElementById('clearNotifications');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        notificationList.innerHTML = '<div class="no-notifications">No notifications</div>';
+                        document.getElementById('notificationBadge').style.display = 'none';
+                    });
+                }
+            }
+
+            // User profile data
+            const userProfile = {
+                name: 'John Doe',
+                role: 'System Administrator',
+                initials: 'JD'
+            };
+
+            document.getElementById('userName').textContent = userProfile.name;
+            document.getElementById('userRole').textContent = userProfile.role;
+            document.getElementById('userAvatar').textContent = userProfile.initials;
+        });
+
+        // jQuery Validation Configuration
+        $(document).ready(function() {
+            // Initialize validation for all forms with class 'needs-validation'
+            $('.needs-validation').each(function() {
+                $(this).validate({
+                    errorClass: "is-invalid",
+                    validClass: "is-valid",
+                    errorElement: "div",
+                    errorPlacement: function(error, element) {
+                        error.addClass("invalid-feedback");
+                        if (element.prop("type") === "checkbox") {
+                            error.insertAfter(element.next("label"));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass(errorClass).removeClass(validClass);
+                        $(element).closest('.form-group').find('.form-control').addClass(errorClass);
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass(errorClass).addClass(validClass);
+                        $(element).closest('.form-group').find('.form-control').removeClass(errorClass);
+                    },
+                    rules: {
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        password: {
+                            required: true,
+                            minlength: 6
+                        }
+                    },
+                    messages: {
+                        email: {
+                            required: "Please enter your email address",
+                            email: "Please enter a valid email address"
+                        },
+                        password: {
+                            required: "Please enter your password",
+                            minlength: "Password must be at least 6 characters long"
+                        }
+                    },
+                    submitHandler: function(form) {
+                        form.submit();
+                    }
+                });
+            });
+
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+  
+    <partial name="~/Views/Shared/_title_meta.cshtml" />
+   
+    <partial name="~/Views/Shared/_title_meta.cshtml" />
+</html>
