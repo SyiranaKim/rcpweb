@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder webAppBuilder = WebApplication.CreateBuilder(args);
+
+var builder = webAppBuilder;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

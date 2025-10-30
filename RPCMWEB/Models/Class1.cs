@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace RPCMWEB.Models
+﻿namespace RPCMWEB.Models
 {
     public class CorporateArticleViewModel
     {

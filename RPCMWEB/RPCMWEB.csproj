@@ -7,10 +7,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Widgets\**" />
     <Compile Remove="wwwroot\img\**" />
+    <Content Remove="Views\Widgets\**" />
     <Content Remove="wwwroot\img\**" />
+    <EmbeddedResource Remove="Views\Widgets\**" />
     <EmbeddedResource Remove="wwwroot\img\**" />
+    <None Remove="Views\Widgets\**" />
     <None Remove="wwwroot\img\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Apps\EcommerceAction.cshtml" />
+    <Content Remove="Views\Dashboard\Analytics.cshtml" />
+    <Content Remove="Views\Dashboard\Blog.cshtml" />
+    <Content Remove="Views\Dashboard\CRM.cshtml" />
+    <Content Remove="Views\Dashboard\Crypto.cshtml" />
+    <Content Remove="Views\Dashboard\Job.cshtml" />
+    <Content Remove="Views\Dashboard\NFT.cshtml" />
+    <Content Remove="Views\Pages\ComingSoon.cshtml" />
+    <Content Remove="Views\Pages\FAQs.cshtml" />
+    <Content Remove="Views\Pages\Gallery.cshtml" />
+    <Content Remove="Views\Pages\Maintenance.cshtml" />
+    <Content Remove="Views\Pages\Pricing.cshtml" />
+    <Content Remove="Views\Pages\PrivacyPolicy.cshtml" />
+    <Content Remove="Views\Pages\SearchResults.cshtml" />
+    <Content Remove="Views\Pages\Sitemap.cshtml" />
+    <Content Remove="Views\Pages\Starter.cshtml" />
+    <Content Remove="Views\Pages\Team.cshtml" />
+    <Content Remove="Views\Pages\TermConditions.cshtml" />
+    <Content Remove="Views\Pages\Timeline.cshtml" />
+    <Content Remove="Views\Shared\Index.cshtml" />
   </ItemGroup>
 
 </Project>
