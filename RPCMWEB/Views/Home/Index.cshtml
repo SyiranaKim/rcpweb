@@ -7,6 +7,9 @@
 }
 
 @section styles {
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <style>
         /* Dashboard-specific styles */
         .dashboard-card {
@@ -158,25 +161,183 @@
             margin-bottom: 10px;
             color: var(--brand-green);
         }
+
+        /* Swiper specific styles */
+        .pagination-scrollbar-swiper {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+            .pagination-scrollbar-swiper .swiper-slide {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f8f9fa;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+                .pagination-scrollbar-swiper .swiper-slide img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+            .pagination-scrollbar-swiper .swiper-button-next,
+            .pagination-scrollbar-swiper .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+                background: white;
+                border-radius: 50%;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                color: var(--brand-green);
+            }
+
+                .pagination-scrollbar-swiper .swiper-button-next:after,
+                .pagination-scrollbar-swiper .swiper-button-prev:after {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                }
+
+            .pagination-scrollbar-swiper .swiper-scrollbar {
+                background: rgba(0,0,0,0.1);
+                height: 6px;
+            }
+
+            .pagination-scrollbar-swiper .swiper-scrollbar-drag {
+                background: var(--brand-green);
+            }
+
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .calendar-day {
+            padding: 8px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .calendar-day:hover {
+                background: var(--brand-green);
+                color: white;
+            }
+
+            .calendar-day.event {
+                background: var(--brand-green);
+                color: white;
+            }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
     </style>
 }
-<!-- Welcome Section -->
-<div class="welcome-section">
-    <h1 class="welcome-title translatable" data-resource="Welcome">
-        Welcome to RP Chemicals Malaysia
-    </h1>
-    <p class="welcome-subtitle translatable" data-resource="CorporateNews">
-        Your corporate dashboard and portal
-    </p>
+
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1 class="welcome-title">Welcome to RPCMWEB</h1>
+        <p class="welcome-subtitle">Your comprehensive dashboard for monitoring and management</p>
+    </div>
+
+    
+
+    <!-- Swiper Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Image Gallery</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Swiper with navigation and scrollbar</p>
+
+                    <!-- Swiper Container -->
+                    <div class="swiper pagination-scrollbar-swiper rounded">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="~/assets/images/" alt="Image 1" class="img-fluid rounded" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/800x400/1e7e34/ffffff?text=Image+2" alt="Image 2" class="img-fluid rounded" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/800x400/28a745/ffffff?text=Image+3" alt="Image 3" class="img-fluid rounded" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/800x400/20c997/ffffff?text=Image+4" alt="Image 4" class="img-fluid rounded" />
+                            </div>
+                        </div>
+
+                        <!-- Navigation buttons -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+
+                        <!-- Scrollbar -->
+                        <div class="swiper-scrollbar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section with Calendar and Events -->
+    <div class="row mt-4">
+        <div class="col-xl-6 col-lg-12">
+            <!-- Upcoming Events Section -->
+            <div class="dashboard-card card-animate">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="stat-label mb-1">Upcoming Events</h5>
+                        <div class="stat-number">5</div>
+                    </div>
+                    <div class="icon-wrapper bg-warning-subtle">📅</div>
+                </div>
+                <div id="upcomingEventsList">
+                    <!-- Events will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-12">
+            <!-- Calendar Section -->
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="stat-label mb-0">Team Calendar</h5>
+                    <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#calendarOffcanvas">
+                        📅 Full Calendar
+                    </button>
+                </div>
+                <div id="miniCalendar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#recentActivityOffcanvas">
+                    Show Recent Activity
+                </button>
+                <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#calendarOffcanvas">
+                    📅 Open Team Calendar
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- Toggle Button -->
-<button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#recentActivityOffcanvas">
-    Show Recent Activity
-</button>
-<!-- Toggle Button (optional) -->
-<button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#calendarOffcanvas">
-    📅 Open Team Calendar
-</button>
 
 <!-- Offcanvas Calendar -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="calendarOffcanvas" aria-labelledby="calendarOffcanvasLabel">
@@ -186,98 +347,7 @@
     </div>
     <div class="offcanvas-body p-3">
         <div id="calendarHeader"></div>
-        <div id="calendarGrid"></div>
-    </div>
-</div>
-
-<!-- Upcoming Events Section -->
-<div class="dashboard-card card-animate">
-    <div class="d-flex justify-content-between align-items-start">
-        <div>
-            <div class="stat-label">Upcoming Events</div>
-          
-            </div>
-        </div>
-    <div class="icon-wrapper bg-warning-subtle"> 📅 </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="quick-actions">
-    <a href="http://ithelpme.rpcm.com.my/" target="_blank" class="action-btn">
-        <div class="action-icon">🛠️</div>
-        <div class="translatable" data-resource="ITHelpMe">IT HelpMe</div>
-    </a>
-    <a href="https://ess.rpcm.com.my/" target="_blank" class="action-btn">
-        <div class="action-icon">👥</div>
-        <div class="translatable" data-resource="ESSPortal">ESS Portal</div>
-    </a>
-    <a href="http://inside.rpcm.com.my/Pages/apn.aspx" target="_blank" class="action-btn">
-        <div class="action-icon">📰</div>
-        <div class="translatable" data-resource="PlantNewsletter">Plant Newsletter</div>
-    </a>
-    <a href="http://hr.rpcm.com.my/sites/plex" target="_blank" class="action-btn">
-        <div class="action-icon">💼</div>
-        <div class="translatable" data-resource="InternalPortal">Plex Portal</div>
-    </a>
-</div>
-
-<!-- Stats Grid -->
-<div class="stats-grid">
-    <!-- Stat Card 1 -->
-    <div class="dashboard-card card-animate">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <div class="stat-label">Active Projects</div>
-                <div class="stat-number" data-target="24">0</div>
-                <div class="stat-trend trend-up">
-                    <span>+12.5%</span>
-                </div>
-            </div>
-            <div class="icon-wrapper bg-success-subtle">📊</div>
-        </div>
-    </div>
-
-    <!-- Stat Card 2 -->
-    <div class="dashboard-card card-animate">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <div class="stat-label">Team Members</div>
-                <div class="stat-number" data-target="156">0</div>
-                <div class="stat-trend trend-up">
-                    <span>+5.2%</span>
-                </div>
-            </div>
-            <div class="icon-wrapper bg-info-subtle">👥</div>
-        </div>
-    </div>
-
-    <!-- Stat Card 3 -->
-    <div class="dashboard-card card-animate">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <div class="stat-label">Tasks Completed</div>
-                <div class="stat-number" data-target="89">0</div>
-                <div class="stat-trend trend-up">
-                    <span>+8.7%</span>
-                </div>
-            </div>
-            <div class="icon-wrapper bg-warning-subtle">✅</div>
-        </div>
-    </div>
-
-    <!-- Stat Card 4 -->
-    <div class="dashboard-card card-animate">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <div class="stat-label">Pending Requests</div>
-                <div class="stat-number" data-target="12">0</div>
-                <div class="stat-trend trend-down">
-                    <span>-3.1%</span>
-                </div>
-            </div>
-            <div class="icon-wrapper bg-danger-subtle">⏳</div>
-        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
     </div>
 </div>
 
@@ -290,7 +360,6 @@
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px);">
             <div class="activity-list p-3">
-
                 <div class="activity-item d-flex mb-3">
                     <div class="activity-icon me-2">🎉</div>
                     <div>
@@ -315,20 +384,85 @@
                     </div>
                 </div>
 
+                <div class="activity-item d-flex mb-3">
+                    <div class="activity-icon me-2">✅</div>
+                    <div>
+                        <div class="activity-title">Monthly report approved</div>
+                        <small class="text-muted">2 days ago</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 @section scripts {
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Swiper
+            initSwiper();
+
             // Initialize counters
             initCounters();
 
             // Initialize dashboard functionality
             initDashboard();
+
+            // Initialize calendar
+            initCalendar();
         });
+
+        function initSwiper() {
+            // Initialize Swiper with proper configuration
+            const swiper = new Swiper('.pagination-scrollbar-swiper', {
+                // Optional parameters
+                direction: 'horizontal',
+                loop: true,
+                speed: 600,
+
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                // Scrollbar
+                scrollbar: {
+                    el: '.swiper-scrollbar',
+                    draggable: true,
+                },
+
+                // Autoplay
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+
+                // Effect
+                effect: 'slide',
+
+                // Responsive breakpoints
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1,
+                        spaceBetween: 10
+                    },
+                    768: {
+                        slidesPerView: 1,
+                        spaceBetween: 20
+                    },
+                    1024: {
+                        slidesPerView: 1,
+                        spaceBetween: 30
+                    }
+                }
+            });
+
+            console.log('Swiper initialized successfully');
+        }
 
         function initCounters() {
             const counters = document.querySelectorAll('.stat-number');
@@ -346,10 +480,10 @@
                     stepCount++;
 
                     if (stepCount >= steps) {
-                        counter.textContent = target;
+                        counter.textContent = target.toLocaleString();
                         clearInterval(timer);
                     } else {
-                        counter.textContent = Math.round(current);
+                        counter.textContent = Math.round(current).toLocaleString();
                     }
                 }, duration / steps);
             });
@@ -359,11 +493,16 @@
             // Add click handlers to action buttons
             document.querySelectorAll('.action-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
+                    e.preventDefault();
                     // Add click animation
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
+
+                    // Show feedback
+                    const actionText = this.querySelector('div:last-child').textContent;
+                    alert(`Action triggered: ${actionText}`);
                 });
             });
 
@@ -378,8 +517,146 @@
                 });
             });
 
-            // Initialize any dashboard-specific functionality
             console.log('Dashboard initialized successfully');
+        }
+
+        // Calendar functionality
+        let currentDate = new Date();
+        let events = {
+            // Pre-populate with some events
+            [new Date().toISOString().split('T')[0]]: "Team Meeting",
+            [new Date(Date.now() + 86400000).toISOString().split('T')[0]]: "Project Deadline",
+            [new Date(Date.now() + 172800000).toISOString().split('T')[0]]: "Client Presentation"
+        };
+
+        function initCalendar() {
+            renderCalendar(currentDate);
+            renderMiniCalendar();
+        }
+
+        function renderCalendar(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Header
+            document.getElementById('calendarHeader').innerHTML = `
+                <div class="calendar-header">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="changeMonth(-1)">
+                        ← Previous
+                    </button>
+                    <h5 class="mb-0">${date.toLocaleString('default', { month: 'long' })} ${year}</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="changeMonth(1)">
+                        Next →
+                    </button>
+                </div>
+            `;
+
+            // Grid
+            let gridHTML = '';
+            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            // Add weekday headers
+            weekdays.forEach(day => {
+                gridHTML += `<div class="fw-bold text-center p-2">${day}</div>`;
+            });
+
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < firstDay; i++) {
+                gridHTML += `<div class="calendar-day"></div>`;
+            }
+
+            // Add days of the month
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+                const hasEvent = events[dateStr];
+                const isToday = new Date().toDateString() === new Date(year, month, d).toDateString();
+
+                gridHTML += `
+                    <div class="calendar-day ${hasEvent ? 'event' : ''} ${isToday ? 'border border-success' : ''}"
+                         onclick="addEvent('${dateStr}')"
+                         title="${hasEvent ? events[dateStr] : 'Click to add event'}">
+                        ${d}
+                        ${hasEvent ? '<br><small>●</small>' : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('calendarGrid').innerHTML = gridHTML;
+            renderUpcomingEvents();
+        }
+
+        function renderMiniCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthName = currentDate.toLocaleString('default', { month: 'long' });
+
+            document.getElementById('miniCalendar').innerHTML = `
+                <div class="text-center mb-2">
+                    <strong>${monthName} ${year}</strong>
+                </div>
+                <div class="text-muted small">
+                    <p>Use the "Full Calendar" button to view and manage events.</p>
+                    <p>Next event: ${getNextEvent()}</p>
+                </div>
+            `;
+        }
+
+        function getNextEvent() {
+            const today = new Date().toISOString().split('T')[0];
+            const upcoming = Object.entries(events)
+                .filter(([date]) => date >= today)
+                .sort(([a], [b]) => a.localeCompare(b))[0];
+
+            return upcoming ? `${upcoming[1]} on ${new Date(upcoming[0]).toLocaleDateString()}` : 'No upcoming events';
+        }
+
+        function changeMonth(offset) {
+            currentDate.setMonth(currentDate.getMonth() + offset);
+            renderCalendar(currentDate);
+            renderMiniCalendar();
+        }
+
+        function addEvent(dateKey) {
+            const existingEvent = events[dateKey];
+            const action = existingEvent ?
+                `Edit event for ${dateKey}\nCurrent: ${existingEvent}` :
+                `Add event for ${dateKey}`;
+
+            const title = prompt(action, existingEvent || '');
+            if (title !== null) {
+                if (title.trim() === '') {
+                    delete events[dateKey];
+                } else {
+                    events[dateKey] = title.trim();
+                }
+                renderCalendar(currentDate);
+                renderMiniCalendar();
+            }
+        }
+
+        function renderUpcomingEvents() {
+            const list = document.getElementById('upcomingEventsList');
+            if (!list) return;
+
+            const today = new Date().toISOString().split('T')[0];
+            const upcoming = Object.entries(events)
+                .map(([dateStr, title]) => {
+                    return { date: dateStr, title };
+                })
+                .filter(e => e.date >= today)
+                .sort((a, b) => a.date.localeCompare(b.date))
+                .slice(0, 5); // Show only next 5 events
+
+            list.innerHTML = upcoming.length === 0 ?
+                '<div class="text-muted">No upcoming events</div>' :
+                upcoming.map(e => `
+                    <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                        <span>${e.title}</span>
+                        <small class="text-muted">${new Date(e.date).toLocaleDateString()}</small>
+                    </div>
+                `).join('');
         }
 
         // Theme-aware styling
@@ -410,86 +687,5 @@
         observer.observe(document.documentElement, {
             attributes: true
         });
-
-                       let currentDate = new Date();
-        let events = {}; // Store events as { "YYYY-MM-DD": "Event Title" }
-
-        function renderCalendar(date) {
-          const year = date.getFullYear();
-          const month = date.getMonth();
-          const firstDay = new Date(year, month, 1).getDay();
-          const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-          // Header
-          document.getElementById('calendarHeader').innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <button class="btn btn-sm btn-outline-light" onclick="changeMonth(-1)">←</button>
-              <h5>${date.toLocaleString('default', { month: 'long' })} ${year}</h5>
-              <button class="btn btn-sm btn-outline-light" onclick="changeMonth(1)">→</button>
-            </div>
-          `;
-
-          // Grid
-          let gridHTML = '<div class="d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 6px;">';
-          const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-          weekdays.forEach(day => gridHTML += `<div class="fw-bold text-center">${day}</div>`);
-
-          for (let i = 0; i < firstDay; i++) gridHTML += `<div></div>`;
-          for (let d = 1; d <= daysInMonth; d++) {
-            const key = `${year}-${month + 1}-${d}`;
-            const hasEvent = events[key];
-            gridHTML += `
-              <div onclick="addEvent('${key}')" class="p-2 text-center rounded" style="background:${hasEvent ? '#2ecc71' : '#34495e'}; color:white; cursor:pointer;">
-                ${d}
-              </div>
-            `;
-          }
-
-          gridHTML += '</div>';
-          document.getElementById('calendarGrid').innerHTML = gridHTML;
-
-          // Update upcoming events
-          renderUpcomingEvents();
-        }
-
-        function changeMonth(offset) {
-          currentDate.setMonth(currentDate.getMonth() + offset);
-          renderCalendar(currentDate);
-        }
-
-        function addEvent(dateKey) {
-          const title = prompt("Add event for " + dateKey);
-          if (title) {
-            events[dateKey] = title;
-            renderCalendar(currentDate);
-          }
-        }
-
-        function renderUpcomingEvents() {
-          const list = document.getElementById('upcomingEventsList');
-          if (!list) return;
-
-          const today = new Date();
-          const upcoming = Object.entries(events)
-            .map(([dateStr, title]) => {
-              const [y, m, d] = dateStr.split('-');
-              const dateObj = new Date(y, m - 1, d);
-              return { date: dateObj, title };
-            })
-            .filter(e => e.date >= today)
-            .sort((a, b) => a.date - b.date);
-
-          list.innerHTML = upcoming.length === 0
-            ? '<li class="list-group-item text-muted">No upcoming events</li>'
-            : upcoming.map(e => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span>${e.title}</span>
-                  <span class="badge bg-success">${e.date.toDateString()}</span>
-                </li>
-              `).join('');
-        }
-
-        // Initial render
-        renderCalendar(currentDate);
     </script>
 }
